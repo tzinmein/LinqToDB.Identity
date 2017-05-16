@@ -11,7 +11,7 @@
     <AssemblyOriginatorKeyFile>../../tools/newkey.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>LinqToDB.Identity</PackageId>
+    <PackageId>linq2db.Identity</PackageId>
     <PackageTags>aspnetcore;linq2db;identity;membership;LinqToDB</PackageTags>
     <PackageIconUrl>http://www.gravatar.com/avatar/fc2e509b6ed116b9aa29a7988fdb8990?s=320</PackageIconUrl>
     <PackageProjectUrl>https://github.com/ili/LinqToDB.Identity</PackageProjectUrl>

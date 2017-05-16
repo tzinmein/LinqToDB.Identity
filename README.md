@@ -1,17 +1,31 @@
 [LinqToDB](https://github.com/linq2db/linq2db) Identity store provider for [ASP.NET Core Identity](https://github.com/aspnet/Identity)
 ===
 
-AppVeyor last build: [![Build status](https://ci.appveyor.com/api/projects/status/x15cyc688w9247oj?svg=true)](https://ci.appveyor.com/project/ili/linqtodb-identity)
+* Current build status [![Build status](https://ci.appveyor.com/api/projects/status/2d8k9n1x5ggsuv3f?svg=true)](https://ci.appveyor.com/project/igor-tkachev/linqtodb-identity)
+* Master build status [![Build status](https://ci.appveyor.com/api/projects/status/2d8k9n1x5ggsuv3f/branch/master?svg=true)](https://ci.appveyor.com/project/igor-tkachev/linqtodb-identity/branch/master)
 
-AppVeyor master build: [![Build status](https://ci.appveyor.com/api/projects/status/x15cyc688w9247oj/branch/master?svg=true)](https://ci.appveyor.com/project/ili/linqtodb-identity/branch/master)
 
-## NuGet
-* [NuGet.org](https://www.nuget.org/packages/LinqToDB.Identity/)
-* [MyGet.org](https://www.myget.org/feed/ili/package/nuget/LinqToDB.Identity) feed: https://www.myget.org/F/ili/api/v3/index.json
-
+## Feeds
+* Release builds can be found on [NuGet](https://www.nuget.org/packages?q=linq2db)
+* [MyGet](https://www.myget.org/gallery/linq2db)
+  * V2 `https://www.myget.org/F/linq2db/api/v2`
+  * V3 `https://www.myget.org/F/linq2db/api/v3/index.json`
 
 ## Usage
-In general this is the same as for Entity Framework, just call `AddLinqToDBStores` instead of `AddEntityFrameworkStores` in your `Startup.cs` like [here](https://github.com/ili/LinqToDB.Identity/blob/master/samples/IdentitySample.Mvc/Startup.cs#L62)
+Install package:
+
+`PM> Install-Package linq2db.Identity`
+
+In general this is the same as for Entity Framework, just call `AddLinqToDBStores` instead of `AddEntityFrameworkStores` in your `Startup.cs` like [here](https://github.com/linq2db/LinqToDB.Identity/blob/master/samples/IdentitySample.Mvc/Startup.cs#L62):
+```cs
+services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+    options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
+    options.Cookies.ApplicationCookie.CookieName = "Interop";
+    options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+})
+    .AddLinqToDBStores(new DefaultConnectionFactory<DataContext, ApplicationDataConnection>()) //here
+    .AddDefaultTokenProviders();
+```
 
 The main difference with Entity Framework Core storage provider are:
 * We do not use hardcoded classes - interfaces like `IIdentityUser<TKey>` are used (but yes, we do have default implementation)
