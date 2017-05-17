@@ -72,7 +72,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			builder.Services.AddSingleton(factory);
 
-			builder.Services.TryAdd(GetDefaultServices(builder.UserType, builder.RoleType, typeof(TContext), typeof(TKey)));
+			builder.Services.TryAdd(GetDefaultServices(builder.UserType, builder.RoleType, typeof(TContext), typeof(TConnection), typeof(TKey)));
 			return builder;
 		}
 
