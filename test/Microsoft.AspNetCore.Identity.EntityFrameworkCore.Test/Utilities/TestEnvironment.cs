@@ -6,19 +6,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test.Utilities
 {
-    public static class TestEnvironment
-    {
-        public static IConfiguration Config { get; }
+	public static class TestEnvironment
+	{
+		static TestEnvironment()
+		{
+			var configBuilder = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("config.json", true)
+				.AddJsonFile("config.test.json", true)
+				.AddEnvironmentVariables();
 
-        static TestEnvironment()
-        {
-            var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json", optional: true)
-                .AddJsonFile("config.test.json", optional: true)
-                .AddEnvironmentVariables();
+			Config = configBuilder.Build();
+		}
 
-            Config = configBuilder.Build();
-        }
-    }
+		public static IConfiguration Config { get; }
+	}
 }

@@ -20,7 +20,9 @@ namespace LinqToDB.Identity
 				ms.SetValue(obj, res, identity);
 			}
 			else
+			{
 				db.Insert(obj);
+			}
 
 			return obj;
 		}
@@ -39,7 +41,7 @@ namespace LinqToDB.Identity
 			var stamp = Guid.NewGuid().ToString();
 
 			var query = dc.GetTable<T>()
-				.Where(_ => _.Id.Equals(obj.Id) && (_.ConcurrencyStamp == obj.ConcurrencyStamp))
+				.Where(_ => _.Id.Equals(obj.Id) && _.ConcurrencyStamp == obj.ConcurrencyStamp)
 				.Set(_ => _.ConcurrencyStamp, stamp);
 
 			var ed = dc.MappingSchema.GetEntityDescriptor(typeof(T));
@@ -47,7 +49,7 @@ namespace LinqToDB.Identity
 			foreach (
 				var column in
 				ed.Columns.Where(
-					_ => (_.MemberName != nameof(IConcurrency<TKey>.ConcurrencyStamp)) && !_.IsPrimaryKey && !_.SkipOnUpdate))
+					_ => _.MemberName != nameof(IConcurrency<TKey>.ConcurrencyStamp) && !_.IsPrimaryKey && !_.SkipOnUpdate))
 			{
 				var expr = Expression
 					.Lambda<Func<T, object>>(

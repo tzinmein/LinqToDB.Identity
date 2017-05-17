@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Internal;
 
 namespace LinqToDB.Identity
 {
@@ -76,9 +75,9 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
 	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
 	public class UserStore<TContext, TConnection, TUser, TRole, TKey> :
-			UserStore
-			<TContext, TConnection, TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
-				IdentityUserToken<TKey>>
+		UserStore
+		<TContext, TConnection, TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
+			IdentityUserToken<TKey>>
 		where TUser : IdentityUser<TKey>
 		where TRole : IdentityRole<TKey>
 		where TContext : IDataContext
@@ -150,7 +149,8 @@ namespace LinqToDB.Identity
 		/// <param name="name">The name of the user token.</param>
 		/// <param name="value">The value of the user token.</param>
 		/// <returns></returns>
-		protected override IdentityUserToken<TKey> CreateUserToken(TUser user, string loginProvider, string name, string value)
+		protected override IdentityUserToken<TKey> CreateUserToken(TUser user, string loginProvider, string name,
+			string value)
 		{
 			return new IdentityUserToken<TKey>
 			{
@@ -175,9 +175,9 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TUserToken">The type representing a user token.</typeparam>
 	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
 	public abstract class UserStore<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin,
-			TUserToken> :
-			UserStore
-			<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, IdentityRoleClaim<TKey>>
+		TUserToken> :
+		UserStore
+		<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, IdentityRoleClaim<TKey>>
 		where TUser : IdentityUser<TKey, TUserClaim, TUserRole, TUserLogin>
 		where TRole : IdentityRole<TKey, TUserRole, IdentityRoleClaim<TKey>>
 		where TContext : IDataContext
@@ -217,18 +217,18 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TRoleClaim">The type representing a role claim.</typeparam>
 	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
 	public abstract class UserStore<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin,
-			TUserToken, TRoleClaim> :
-			IUserLoginStore<TUser>,
-			IUserRoleStore<TUser>,
-			IUserClaimStore<TUser>,
-			IUserPasswordStore<TUser>,
-			IUserSecurityStampStore<TUser>,
-			IUserEmailStore<TUser>,
-			IUserLockoutStore<TUser>,
-			IUserPhoneNumberStore<TUser>,
-			IQueryableUserStore<TUser>,
-			IUserTwoFactorStore<TUser>,
-			IUserAuthenticationTokenStore<TUser>
+		TUserToken, TRoleClaim> :
+		IUserLoginStore<TUser>,
+		IUserRoleStore<TUser>,
+		IUserClaimStore<TUser>,
+		IUserPasswordStore<TUser>,
+		IUserSecurityStampStore<TUser>,
+		IUserEmailStore<TUser>,
+		IUserLockoutStore<TUser>,
+		IUserPhoneNumberStore<TUser>,
+		IQueryableUserStore<TUser>,
+		IUserTwoFactorStore<TUser>,
+		IUserAuthenticationTokenStore<TUser>
 		where TUser : class, IIdentityUser<TKey>
 		where TRole : class, IIdentityRole<TKey>
 		where TUserClaim : class, IIdentityUserClaim<TKey>
@@ -300,12 +300,14 @@ namespace LinqToDB.Identity
 				using (var dc = _factory.GetConnection())
 				{
 					var q = dc.GetTable<TUserToken>()
-						.Where(_ => _.UserId.Equals(user.Id) && (_.LoginProvider == loginProvider) && (_.Name == name));
+						.Where(_ => _.UserId.Equals(user.Id) && _.LoginProvider == loginProvider && _.Name == name);
 
 					var token = q.FirstOrDefault();
 
 					if (token == null)
+					{
 						dc.Insert(CreateUserToken(user, loginProvider, name, value));
+					}
 					else
 					{
 						token.Value = value;
@@ -338,8 +340,8 @@ namespace LinqToDB.Identity
 			await Task.Run(() =>
 					_factory.GetContext()
 						.GetTable<TUserToken>()
-						.Where(_ => _.UserId.Equals(user.Id) && (_.LoginProvider == loginProvider) && (_.Name == name)).
-						Delete(),
+						.Where(_ => _.UserId.Equals(user.Id) && _.LoginProvider == loginProvider && _.Name == name)
+						.Delete(),
 				cancellationToken);
 		}
 
@@ -365,7 +367,7 @@ namespace LinqToDB.Identity
 
 			var entry = await _factory.GetContext()
 				.GetTable<TUserToken>()
-				.Where(_ => _.UserId.Equals(user.Id) && (_.LoginProvider == loginProvider) && (_.Name == name))
+				.Where(_ => _.UserId.Equals(user.Id) && _.LoginProvider == loginProvider && _.Name == name)
 				.FirstOrDefaultAsync(cancellationToken);
 
 			return entry?.Value;
@@ -388,7 +390,8 @@ namespace LinqToDB.Identity
 				throw new ArgumentNullException(nameof(user));
 
 			return await
-				_factory.GetContext().GetTable<TUserClaim>()
+				_factory.GetContext()
+					.GetTable<TUserClaim>()
 					.Where(uc => uc.UserId.Equals(user.Id))
 					.Select(c => c.ToClaim())
 					.ToListAsync(cancellationToken);
@@ -447,8 +450,9 @@ namespace LinqToDB.Identity
 
 			await Task.Run(() =>
 			{
-				var q = _factory.GetContext().GetTable<TUserClaim>()
-					.Where(uc => uc.UserId.Equals(user.Id) && (uc.ClaimValue == claim.Value) && (uc.ClaimType == claim.Type));
+				var q = _factory.GetContext()
+					.GetTable<TUserClaim>()
+					.Where(uc => uc.UserId.Equals(user.Id) && uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
 
 				q.Set(_ => _.ClaimValue, newClaim.Value)
 					.Set(_ => _.ClaimType, newClaim.Type)
@@ -535,8 +539,8 @@ namespace LinqToDB.Identity
 
 			var query = from userclaims in dc.GetTable<TUserClaim>()
 				join user in Users on userclaims.UserId equals user.Id
-				where (userclaims.ClaimValue == claim.Value)
-				      && (userclaims.ClaimType == claim.Type)
+				where userclaims.ClaimValue == claim.Value
+				      && userclaims.ClaimType == claim.Type
 				select user;
 
 			return await query.ToListAsync(cancellationToken);
@@ -624,7 +628,8 @@ namespace LinqToDB.Identity
 		///     The task object containing the results of the asynchronous operation, the email address for the specified
 		///     <paramref name="user" />.
 		/// </returns>
-		public virtual Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+		public virtual Task<string> GetEmailAsync(TUser user,
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			ThrowIfDisposed();
@@ -1030,7 +1035,7 @@ namespace LinqToDB.Identity
 				_factory
 					.GetContext()
 					.GetTable<TUser>()
-					.Where(_ => _.Id.Equals(user.Id) && (_.ConcurrencyStamp == user.ConcurrencyStamp))
+					.Where(_ => _.Id.Equals(user.Id) && _.ConcurrencyStamp == user.ConcurrencyStamp)
 					.Delete(), cancellationToken);
 			return result == 1 ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
 		}
@@ -1132,8 +1137,8 @@ namespace LinqToDB.Identity
 						.GetTable<TUserLogin>()
 						.Delete(
 							userLogin =>
-								userLogin.UserId.Equals(user.Id) && (userLogin.LoginProvider == loginProvider) &&
-								(userLogin.ProviderKey == providerKey)),
+								userLogin.UserId.Equals(user.Id) && userLogin.LoginProvider == loginProvider &&
+								userLogin.ProviderKey == providerKey),
 				cancellationToken);
 		}
 
@@ -1188,7 +1193,7 @@ namespace LinqToDB.Identity
 			var dc = _factory.GetContext();
 			var q = from ul in dc.GetTable<TUserLogin>()
 				join u in dc.GetTable<TUser>() on ul.UserId equals u.Id
-				where (ul.LoginProvider == loginProvider) && (ul.ProviderKey == providerKey)
+				where ul.LoginProvider == loginProvider && ul.ProviderKey == providerKey
 				select u;
 
 			return await q.FirstOrDefaultAsync(cancellationToken);
@@ -1400,7 +1405,7 @@ namespace LinqToDB.Identity
 					var q =
 						from ur in dc.GetTable<TUserRole>()
 						join r in dc.GetTable<TRole>() on ur.RoleId equals r.Id
-						where (r.NormalizedName == normalizedRoleName) && ur.UserId.Equals(user.Id)
+						where r.NormalizedName == normalizedRoleName && ur.UserId.Equals(user.Id)
 						select ur;
 
 					q.Delete();
@@ -1462,7 +1467,7 @@ namespace LinqToDB.Identity
 
 			var q = from ur in dc.GetTable<TUserRole>()
 				join r in dc.GetTable<TRole>() on ur.RoleId equals r.Id
-				where (r.NormalizedName == normalizedRoleName) && ur.UserId.Equals(user.Id)
+				where r.NormalizedName == normalizedRoleName && ur.UserId.Equals(user.Id)
 				select ur;
 
 			return await q.AnyAsync(cancellationToken);

@@ -4,9 +4,9 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    //public static class EntityFrameworkServiceBuilderExtension
-    //{
-    //    public static IServiceCollection ServiceCollection(this EntityFrameworkServicesBuilder services)
-    //        => services.GetInfrastructure();
-    //}
+	//public static class EntityFrameworkServiceBuilderExtension
+	//{
+	//    public static IServiceCollection ServiceCollection(this EntityFrameworkServicesBuilder services)
+	//        => services.GetInfrastructure();
+	//}
 }

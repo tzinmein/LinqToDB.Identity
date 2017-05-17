@@ -17,7 +17,10 @@ namespace LinqToDB.Identity
 		/// <returns>
 		///     <see cref="DataConnection" />
 		/// </returns>
-		public TConnection GetConnection() => new TConnection();
+		public TConnection GetConnection()
+		{
+			return new TConnection();
+		}
 
 		/// <summary>
 		///     Creates <see cref="DataContext" /> with default parameters
@@ -25,6 +28,9 @@ namespace LinqToDB.Identity
 		/// <returns>
 		///     <see cref="DataContext" />
 		/// </returns>
-		public TContext GetContext() => new TContext();
+		public TContext GetContext()
+		{
+			return new TContext();
+		}
 	}
 }
