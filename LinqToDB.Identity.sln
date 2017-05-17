@@ -11,8 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{970CAB07-F853-4712-AA12-BD8961C8E430}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		build.cmd = build.cmd
+		build.cake = build.cake
 		build.ps1 = build.ps1
+		linq2db.snk = linq2db.snk
 		NuGet.config = NuGet.config
 		README.md = README.md
 	EndProjectSection

@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp1.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test</AssemblyName>
-    <AssemblyOriginatorKeyFile>../../tools/Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)Tests.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test</PackageId>
