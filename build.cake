@@ -12,6 +12,7 @@ var sourcePath          = Directory("./src");
 var testsPath           = Directory("test");
 var buildArtifacts      = Directory("./artifacts/packages");
 var solutionName        = "./LinqToDB.Identity.sln";
+var nugetProject        = "./src/LinqToDB.Identity/LinqToDB.Identity.csproj";
 var envPackageVersion   = EnvironmentVariable("nugetVersion");
 var argRelease          = Argument<string>("Release", null);
 
@@ -42,7 +43,7 @@ Task("Build")
 		Console.WriteLine("Assembly Version: {0}", assemblyVersion);
 
 
-		TransformConfig("./src/LinqToDB.Identity/LinqToDB.Identity.csproj", "./src/LinqToDB.Identity/LinqToDB.Identity.csproj",
+		TransformConfig(nugetProject, nugetProject,
 		new TransformationCollection {
 			{ "Project/PropertyGroup/Version",         fullPackageVersion },
 			{ "Project/PropertyGroup/VersionPrefix",   packageVersion },
