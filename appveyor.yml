@@ -1,8 +1,7 @@
 init:
   - git config --global core.autocrlf true
-  - ps: |
-    [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true", "Machine")
-    [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true")
+  - ps: [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true", "Machine")
+  - ps: [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true")
 
 cache:
 - packages -> **\packages.config
@@ -15,6 +14,7 @@ version: $(nugetVersion).{build}
 
 build_script:
 - ps: .\build.ps1
+
 test: off
 
 artifacts:
