@@ -1,7 +1,6 @@
 init:
   - git config --global core.autocrlf true
-  - ps: [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true", "Machine")
-  - ps: [Environment]::SetEnvironmentVariable("Test:SqlServer:DefaultConnectionString", "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true")
+  - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true"
 
 cache:
 - packages -> **\packages.config

@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LinqToDB.Identity;
 
 namespace IdentitySample.Models
 {
-    public class ApplicationDataConnection : IdentityDataConnection<ApplicationUser>
-    {
-    }
+	public class ApplicationDataConnection : IdentityDataConnection<ApplicationUser>
+	{
+	}
 }

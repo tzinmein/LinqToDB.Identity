@@ -41,7 +41,7 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TKey">The type used for the primary key for the user.</typeparam>
 	public class IdentityUser<TKey> :
-			IdentityUser<TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>>
+		IdentityUser<TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>>
 		where TKey : IEquatable<TKey>
 	{
 	}

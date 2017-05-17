@@ -41,7 +41,8 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			builder.Services.AddSingleton(factory);
 
-			builder.Services.TryAdd(GetDefaultServices(builder.UserType, builder.RoleType, typeof(TContext), typeof(TConnection)));
+			builder.Services.TryAdd(
+				GetDefaultServices(builder.UserType, builder.RoleType, typeof(TContext), typeof(TConnection)));
 			return builder;
 		}
 

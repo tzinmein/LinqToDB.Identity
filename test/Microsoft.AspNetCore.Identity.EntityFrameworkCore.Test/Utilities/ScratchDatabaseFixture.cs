@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test.Utilities;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 {
-    public class ScratchDatabaseFixture : IDisposable
-    {
-        private SqlServerTestStore _testStore;
-	    private SqlServerTestStore TestStore => _testStore ?? (_testStore = SqlServerTestStore.CreateScratch());
+	public class ScratchDatabaseFixture : IDisposable
+	{
+		private SqlServerTestStore _testStore;
+		private SqlServerTestStore TestStore => _testStore ?? (_testStore = SqlServerTestStore.CreateScratch());
 
-        public string ConnectionString => TestStore.Connection.ConnectionString;
+		public string ConnectionString => TestStore.Connection.ConnectionString;
 
-        public void Dispose()
-        {
-	        _testStore?.Dispose();
-        }
-    }
+		public void Dispose()
+		{
+			_testStore?.Dispose();
+		}
+	}
 }

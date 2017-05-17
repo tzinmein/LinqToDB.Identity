@@ -6,31 +6,33 @@ using LinqToDB.Identity;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 {
-    public class IntUser : IdentityUser<int>
-    {
-	    private static volatile int _id = 0;
-        public IntUser()
-        {
-	        Id = ++_id;
-            UserName = Guid.NewGuid().ToString();
-        }
-    }
+	public class IntUser : IdentityUser<int>
+	{
+		private static volatile int _id;
 
-    public class IntRole : IdentityRole<int>
-    {
-	    private static volatile int _id = 0;
-        public IntRole()
-        {
-	        Id = ++_id;
-            Name = Guid.NewGuid().ToString();
-        }
-    }
+		public IntUser()
+		{
+			Id = ++_id;
+			UserName = Guid.NewGuid().ToString();
+		}
+	}
 
-    public class UserStoreIntTest : SqlStoreTestBase<IntUser, IntRole, int>
-    {
-        public UserStoreIntTest(ScratchDatabaseFixture fixture)
-            : base(fixture)
-        {
-        }
-    }
+	public class IntRole : IdentityRole<int>
+	{
+		private static volatile int _id;
+
+		public IntRole()
+		{
+			Id = ++_id;
+			Name = Guid.NewGuid().ToString();
+		}
+	}
+
+	public class UserStoreIntTest : SqlStoreTestBase<IntUser, IntRole, int>
+	{
+		public UserStoreIntTest(ScratchDatabaseFixture fixture)
+			: base(fixture)
+		{
+		}
+	}
 }

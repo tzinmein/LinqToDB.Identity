@@ -107,10 +107,7 @@ namespace LinqToDB.Identity
 		///     Navigation property for claims in this role.
 		/// </summary>
 		[Association(ThisKey = nameof(Id), OtherKey = nameof(IdentityRoleClaim<TKey>.RoleId), Storage = nameof(_claims))]
-		public virtual ICollection<TRoleClaim> Claims
-		{
-			get { return _claims; }
-		}
+		public virtual ICollection<TRoleClaim> Claims => _claims;
 
 		/// <summary>
 		///     Gets or sets the primary key for this role.

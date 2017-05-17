@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Internal;
 
 namespace LinqToDB.Identity
 {
@@ -58,9 +57,9 @@ namespace LinqToDB.Identity
 	///     <see cref="IConnectionFactory{TContext,TConnection}" />
 	/// </typeparam>
 	public class RoleStore<TContext, TConnection, TRole, TKey> :
-			RoleStore<TContext, TConnection, TRole, TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>,
-			IQueryableRoleStore<TRole>,
-			IRoleClaimStore<TRole>
+		RoleStore<TContext, TConnection, TRole, TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>,
+		IQueryableRoleStore<TRole>,
+		IRoleClaimStore<TRole>
 		where TRole : IdentityRole<TKey>
 		where TKey : IEquatable<TKey>
 		where TContext : IDataContext
@@ -108,8 +107,8 @@ namespace LinqToDB.Identity
 	///     <see cref="IConnectionFactory{TContext,TConnection}" />
 	/// </typeparam>
 	public abstract class RoleStore<TContext, TConnection, TRole, TKey, TUserRole, TRoleClaim> :
-			IQueryableRoleStore<TRole>,
-			IRoleClaimStore<TRole>
+		IQueryableRoleStore<TRole>,
+		IRoleClaimStore<TRole>
 		where TRole : class, IIdentityRole<TKey>
 		where TKey : IEquatable<TKey>
 		where TUserRole : class, IIdentityUserRole<TKey>
@@ -214,7 +213,7 @@ namespace LinqToDB.Identity
 				_factory
 					.GetContext()
 					.GetTable<TRole>()
-					.Where(_ => _.Id.Equals(role.Id) && (_.ConcurrencyStamp == role.ConcurrencyStamp))
+					.Where(_ => _.Id.Equals(role.Id) && _.ConcurrencyStamp == role.ConcurrencyStamp)
 					.Delete(), cancellationToken);
 
 			return result == 1 ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
@@ -431,7 +430,7 @@ namespace LinqToDB.Identity
 
 			await Task.Run(() =>
 					Context.GetTable<TRoleClaim>()
-						.Where(rc => rc.RoleId.Equals(role.Id) && (rc.ClaimValue == claim.Value) && (rc.ClaimType == claim.Type))
+						.Where(rc => rc.RoleId.Equals(role.Id) && rc.ClaimValue == claim.Value && rc.ClaimType == claim.Type)
 						.Delete(),
 				cancellationToken);
 		}

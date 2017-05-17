@@ -9,166 +9,162 @@ using System.Threading;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test.Utilities
 {
-    public class SqlServerTestStore : IDisposable
-    {
-        public const int CommandTimeout = 90;
+	public class SqlServerTestStore : IDisposable
+	{
+		public const int CommandTimeout = 90;
+		private readonly string _name;
 
-        public static string CreateConnectionString(string name)
-        {
-            var connStrBuilder = new SqlConnectionStringBuilder(TestEnvironment.Config["Test:SqlServer:DefaultConnectionString"])
-            {
-                InitialCatalog = name
-            };
+		private SqlConnection _connection;
+		private bool _deleteDatabase;
 
-            return connStrBuilder.ConnectionString;
-        }
+		private SqlServerTestStore(string name)
+		{
+			_name = name;
+		}
 
-        public static SqlServerTestStore CreateScratch(bool createDatabase = true)
-            => new SqlServerTestStore(GetScratchDbName()).CreateTransient(createDatabase);
+		public DbConnection Connection => _connection;
 
-        private SqlConnection _connection;
-        private readonly string _name;
-        private bool _deleteDatabase;
+		public void Dispose()
+		{
+			_connection.Dispose();
 
-        private SqlServerTestStore(string name)
-        {
-            _name = name;
-        }
+			if (_deleteDatabase)
+				DeleteDatabase(_name);
+		}
 
-        private static string GetScratchDbName()
-        {
-            string name;
-            do
-            {
-                name = "Scratch_" + Guid.NewGuid();
-            } while (DatabaseExists(name)
-                     || DatabaseFilesExist(name));
+		public static string CreateConnectionString(string name)
+		{
+			var connStrBuilder = new SqlConnectionStringBuilder(TestEnvironment.Config["TestSqlServerDefaultConnectionString"])
+			{
+				InitialCatalog = name
+			};
 
-            return name;
-        }
+			return connStrBuilder.ConnectionString;
+		}
 
-        private static void WaitForExists(SqlConnection connection)
-        {
-            var retryCount = 0;
-            while (true)
-            {
-                try
-                {
-                    connection.Open();
+		public static SqlServerTestStore CreateScratch(bool createDatabase = true)
+		{
+			return new SqlServerTestStore(GetScratchDbName()).CreateTransient(createDatabase);
+		}
 
-                    connection.Close();
+		private static string GetScratchDbName()
+		{
+			string name;
+			do
+			{
+				name = "Scratch_" + Guid.NewGuid();
+			} while (DatabaseExists(name)
+			         || DatabaseFilesExist(name));
 
-                    return;
-                }
-                catch (SqlException e)
-                {
-                    if (++retryCount >= 30
-                        || (e.Number != 233 && e.Number != -2 && e.Number != 4060))
-                    {
-                        throw;
-                    }
+			return name;
+		}
 
-                    SqlConnection.ClearPool(connection);
+		private static void WaitForExists(SqlConnection connection)
+		{
+			var retryCount = 0;
+			while (true)
+				try
+				{
+					connection.Open();
 
-                    Thread.Sleep(100);
-                }
-            }
-        }
+					connection.Close();
 
-        private SqlServerTestStore CreateTransient(bool createDatabase)
-        {
-            _connection = new SqlConnection(CreateConnectionString(_name));
+					return;
+				}
+				catch (SqlException e)
+				{
+					if (++retryCount >= 30
+					    || e.Number != 233 && e.Number != -2 && e.Number != 4060)
+						throw;
 
-            if (createDatabase)
-            {
-                using (var master = new SqlConnection(CreateConnectionString("master")))
-                {
-                    master.Open();
-                    using (var command = master.CreateCommand())
-                    {
-                        command.CommandTimeout = CommandTimeout;
-                        command.CommandText = $"{Environment.NewLine}CREATE DATABASE [{_name}]";
+					SqlConnection.ClearPool(connection);
 
-                        command.ExecuteNonQuery();
+					Thread.Sleep(100);
+				}
+		}
 
-                        WaitForExists(_connection);
-                    }
-                }
-                _connection.Open();
-            }
+		private SqlServerTestStore CreateTransient(bool createDatabase)
+		{
+			_connection = new SqlConnection(CreateConnectionString(_name));
 
-            _deleteDatabase = true;
-            return this;
-        }
+			if (createDatabase)
+			{
+				using (var master = new SqlConnection(CreateConnectionString("master")))
+				{
+					master.Open();
+					using (var command = master.CreateCommand())
+					{
+						command.CommandTimeout = CommandTimeout;
+						command.CommandText = $"{Environment.NewLine}CREATE DATABASE [{_name}]";
 
-        private static bool DatabaseExists(string name)
-        {
-	        var connectionString = CreateConnectionString("master");
-	        try
-	        {
-		        using (var master = new SqlConnection(connectionString))
-		        {
-			        master.Open();
-			        Console.WriteLine(master.ConnectionString);
+						command.ExecuteNonQuery();
 
-			        using (var command = master.CreateCommand())
-			        {
-				        command.CommandTimeout = CommandTimeout;
-				        command.CommandText = $@"SELECT COUNT(*) FROM sys.databases WHERE name = N'{name}'";
+						WaitForExists(_connection);
+					}
+				}
+				_connection.Open();
+			}
 
-				        return (int) command.ExecuteScalar() > 0;
-			        }
-		        }
-	        }
-	        catch (Exception ex)
-	        {
-		        throw new Exception(connectionString + " " + ex.Message, ex);
-	        }
-        }
+			_deleteDatabase = true;
+			return this;
+		}
 
-        private static bool DatabaseFilesExist(string name)
-        {
-            var userFolder = Environment.GetEnvironmentVariable("USERPROFILE") ??
-                             Environment.GetEnvironmentVariable("HOME");
-            return userFolder != null
-                   && (File.Exists(Path.Combine(userFolder, name + ".mdf"))
-                       || File.Exists(Path.Combine(userFolder, name + "_log.ldf")));
-        }
+		private static bool DatabaseExists(string name)
+		{
+			var connectionString = CreateConnectionString("master");
+			try
+			{
+				using (var master = new SqlConnection(connectionString))
+				{
+					master.Open();
+					Console.WriteLine(master.ConnectionString);
 
-        private void DeleteDatabase(string name)
-        {
-            using (var master = new SqlConnection(CreateConnectionString("master")))
-            {
-                master.Open();
+					using (var command = master.CreateCommand())
+					{
+						command.CommandTimeout = CommandTimeout;
+						command.CommandText = $@"SELECT COUNT(*) FROM sys.databases WHERE name = N'{name}'";
 
-                using (var command = master.CreateCommand())
-                {
-                    command.CommandTimeout = CommandTimeout;
-                        // Query will take a few seconds if (and only if) there are active connections
+						return (int) command.ExecuteScalar() > 0;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(connectionString + " " + ex.Message, ex);
+			}
+		}
 
-                    // SET SINGLE_USER will close any open connections that would prevent the drop
-                    command.CommandText
-                        = string.Format(@"IF EXISTS (SELECT * FROM sys.databases WHERE name = N'{0}')
+		private static bool DatabaseFilesExist(string name)
+		{
+			var userFolder = Environment.GetEnvironmentVariable("USERPROFILE") ??
+			                 Environment.GetEnvironmentVariable("HOME");
+			return userFolder != null
+			       && (File.Exists(Path.Combine(userFolder, name + ".mdf"))
+			           || File.Exists(Path.Combine(userFolder, name + "_log.ldf")));
+		}
+
+		private void DeleteDatabase(string name)
+		{
+			using (var master = new SqlConnection(CreateConnectionString("master")))
+			{
+				master.Open();
+
+				using (var command = master.CreateCommand())
+				{
+					command.CommandTimeout = CommandTimeout;
+					// Query will take a few seconds if (and only if) there are active connections
+
+					// SET SINGLE_USER will close any open connections that would prevent the drop
+					command.CommandText
+						= string.Format(@"IF EXISTS (SELECT * FROM sys.databases WHERE name = N'{0}')
                                           BEGIN
                                               ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
                                               DROP DATABASE [{0}];
                                           END", name);
 
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        public DbConnection Connection => _connection;
-
-        public void Dispose()
-        {
-            _connection.Dispose();
-
-            if (_deleteDatabase)
-            {
-                DeleteDatabase(_name);
-            }
-        }
-    }
+					command.ExecuteNonQuery();
+				}
+			}
+		}
+	}
 }
