@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqToDB.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace LinqToDB.Identity
@@ -17,27 +16,17 @@ namespace LinqToDB.Identity
 	///     Creates a new instance of a persistence store for roles.
 	/// </summary>
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-	/// <typeparam name="TContext">
-	///     The type of the class for <see cref="IDataContext" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	/// <typeparam name="TConnection">
-	///     The type of the class for <see cref="DataConnection" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	public class RoleStore<TContext, TConnection, TRole> : RoleStore<TContext, TConnection, TRole, string>
+	public class RoleStore<TRole> : RoleStore<TRole, string>
 		where TRole : IdentityRole<string>
-		where TContext : IDataContext
-		where TConnection : DataConnection
 	{
 		/// <summary>
-		///     Constructs a new instance of <see cref="RoleStore{TRole, TContext, TConnection}" />.
+		///     Constructs a new instance of <see cref="LinqToDB.Identity.RoleStore{TConnection,TRole}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public RoleStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public RoleStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 			: base(factory, describer)
 		{
 		}
@@ -48,31 +37,19 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	/// <typeparam name="TContext">
-	///     The type of the class for <see cref="IDataContext" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	/// <typeparam name="TConnection">
-	///     The type of the class for <see cref="DataConnection" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	public class RoleStore<TContext, TConnection, TRole, TKey> :
-		RoleStore<TContext, TConnection, TRole, TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>,
-		IQueryableRoleStore<TRole>,
-		IRoleClaimStore<TRole>
+	public class RoleStore<TRole, TKey> :
+		RoleStore<TRole, TKey, IdentityRoleClaim<TKey>>
 		where TRole : IdentityRole<TKey>
 		where TKey : IEquatable<TKey>
-		where TContext : IDataContext
-		where TConnection : DataConnection
 	{
 		/// <summary>
-		///     Constructs a new instance of <see cref="RoleStore{TRole, TKey, TContext, TConnection}" />.
+		///     Constructs a new instance of <see cref="RoleStore{TRole,TKey,TRoleClaim}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public RoleStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public RoleStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 			: base(factory, describer)
 		{
 		}
@@ -96,38 +73,26 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	/// <typeparam name="TUserRole">The type of the class representing a user role.</typeparam>
 	/// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-	/// <typeparam name="TContext">
-	///     The type of the class for <see cref="IDataContext" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	/// <typeparam name="TConnection">
-	///     The type of the class for <see cref="DataConnection" />,
-	///     <see cref="IConnectionFactory{TContext,TConnection}" />
-	/// </typeparam>
-	public abstract class RoleStore<TContext, TConnection, TRole, TKey, TUserRole, TRoleClaim> :
+	public abstract class RoleStore<TRole, TKey, TRoleClaim> :
 		IQueryableRoleStore<TRole>,
 		IRoleClaimStore<TRole>
 		where TRole : class, IIdentityRole<TKey>
 		where TKey : IEquatable<TKey>
-		where TUserRole : class, IIdentityUserRole<TKey>
 		where TRoleClaim : class, IIdentityRoleClaim<TKey>
-		where TContext : IDataContext
-		where TConnection : DataConnection
 	{
-		private readonly IConnectionFactory<TContext, TConnection> _factory;
+		private readonly IConnectionFactory _factory;
 
 		private bool _disposed;
 
 		/// <summary>
-		///     Constructs a new instance of <see cref="RoleStore{TRole, TKey, TUserRole, TRoleClaim, TContext, TConnection}" />.
+		///     Constructs a new instance of <see cref="RoleStore{TRole,TKey,TRoleClaim}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public RoleStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public RoleStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 		{
 			if (factory == null)
 				throw new ArgumentNullException(nameof(factory));

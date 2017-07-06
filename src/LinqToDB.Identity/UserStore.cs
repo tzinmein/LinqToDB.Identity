@@ -20,21 +20,17 @@ namespace LinqToDB.Identity
 	///     Creates a new instance of a persistence store for the specified user type.
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
-	/// <typeparam name="TContext">The type of the data getContext class used to access the store.</typeparam>
-	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
-	public class UserStore<TContext, TConnection, TUser> : UserStore<TContext, TConnection, TUser, IdentityRole, string>
+	public class UserStore<TUser> : UserStore<TUser, IdentityRole, string>
 		where TUser : IdentityUser<string>, new()
-		where TContext : IDataContext
-		where TConnection : DataConnection
 	{
 		/// <summary>
 		///     Constructs a new instance of <see cref="UserStore{TUser, TContext, TConnection}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public UserStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public UserStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 			: base(factory, describer)
 		{
 		}
@@ -45,22 +41,18 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
 	/// <typeparam name="TRole">The type representing a role.</typeparam>
-	/// <typeparam name="TContext">The type of the data getContext class used to access the store.</typeparam>
-	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
-	public class UserStore<TContext, TConnection, TUser, TRole> : UserStore<TContext, TConnection, TUser, TRole, string>
+	public class UserStore<TUser, TRole> : UserStore<TUser, TRole, string>
 		where TUser : IdentityUser<string>
 		where TRole : IdentityRole<string>
-		where TContext : IDataContext
-		where TConnection : DataConnection
 	{
 		/// <summary>
-		///     Constructs a new instance of <see cref="UserStore{TUser, TRole, TContext, TConnection}" />.
+		///     Constructs a new instance of <see cref="LinqToDB.Identity.UserStore{TConnection,TUser,TRole}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public UserStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public UserStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 			: base(factory, describer)
 		{
 		}
@@ -71,27 +63,22 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
 	/// <typeparam name="TRole">The type representing a role.</typeparam>
-	/// <typeparam name="TContext">The type of the data getContext class used to access the store.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
-	public class UserStore<TContext, TConnection, TUser, TRole, TKey> :
-		UserStore
-		<TContext, TConnection, TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
+	public class UserStore<TUser, TRole, TKey> :
+		UserStore<TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
 			IdentityUserToken<TKey>>
 		where TUser : IdentityUser<TKey>
 		where TRole : IdentityRole<TKey>
-		where TContext : IDataContext
 		where TKey : IEquatable<TKey>
-		where TConnection : DataConnection
 	{
 		/// <summary>
-		///     Constructs a new instance of <see cref="UserStore{TUser, TRole, TContext, TConncttion, TKey}" />.
+		///     Constructs a new instance of <see cref="LinqToDB.Identity.UserStore{TConnection,TUser,TRole}" />.
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" />.</param>
-		public UserStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public UserStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 			: base(factory, describer)
 		{
 		}
@@ -162,62 +149,18 @@ namespace LinqToDB.Identity
 		}
 	}
 
-	/// <summary>
-	///     Represents a new instance of a persistence store for the specified user and role types.
-	/// </summary>
-	/// <typeparam name="TUser">The type representing a user.</typeparam>
-	/// <typeparam name="TRole">The type representing a role.</typeparam>
-	/// <typeparam name="TContext">The type of the data getContext class used to access the store.</typeparam>
-	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	/// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-	/// <typeparam name="TUserRole">The type representing a user role.</typeparam>
-	/// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
-	/// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
-	public abstract class UserStore<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin,
-		TUserToken> :
-		UserStore
-		<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, IdentityRoleClaim<TKey>>
-		where TUser : IdentityUser<TKey, TUserClaim, TUserRole, TUserLogin>
-		where TRole : IdentityRole<TKey, TUserRole, IdentityRoleClaim<TKey>>
-		where TContext : IDataContext
-		where TKey : IEquatable<TKey>
-		where TUserClaim : IdentityUserClaim<TKey>
-		where TUserRole : IdentityUserRole<TKey>
-		where TUserLogin : IdentityUserLogin<TKey>
-		where TUserToken : IdentityUserToken<TKey>
-		where TConnection : DataConnection
-	{
-		/// <summary>
-		///     Creates a new instance of
-		///     <see cref="UserStore{TUser, TRole, TContext, TConnection, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}" />.
-		/// </summary>
-		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
-		/// </param>
-		/// <param name="describer">The <see cref="IdentityErrorDescriber" /> used to describe store errors.</param>
-		public UserStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
-			: base(factory, describer)
-		{
-		}
-	}
-
 
 	/// <summary>
 	///     Represents a new instance of a persistence store for the specified user and role types.
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
 	/// <typeparam name="TRole">The type representing a role.</typeparam>
-	/// <typeparam name="TContext">The type of the data getContext class used to access the store.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
 	/// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
 	/// <typeparam name="TUserRole">The type representing a user role.</typeparam>
 	/// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
 	/// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-	/// <typeparam name="TRoleClaim">The type representing a role claim.</typeparam>
-	/// <typeparam name="TConnection">The type repewsenting database getConnection <see cref="DataConnection" /></typeparam>
-	public abstract class UserStore<TContext, TConnection, TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin,
-		TUserToken, TRoleClaim> :
+	public abstract class UserStore<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> :
 		IUserLoginStore<TUser>,
 		IUserRoleStore<TUser>,
 		IUserClaimStore<TUser>,
@@ -235,26 +178,23 @@ namespace LinqToDB.Identity
 		where TUserRole : class, IIdentityUserRole<TKey>
 		where TUserLogin : class, IIdentityUserLogin<TKey>
 		where TUserToken : class, IIdentityUserToken<TKey>
-		where TRoleClaim : class, IIdentityRoleClaim<TKey>
-		where TContext : IDataContext
-		where TConnection : DataConnection
 		where TKey : IEquatable<TKey>
 	{
-		private readonly IConnectionFactory<TContext, TConnection> _factory;
+		private readonly IConnectionFactory _factory;
 
 		private bool _disposed;
 
 		/// <summary>
 		///     Creates a new instance of
 		///     <see
-		///         cref="UserStore{TUser, TRole, TContext, TConnection, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}" />
+		///         cref="LinqToDB.Identity.UserStore{TUser,TRole,TKey,TUserClaim,TUserRole,TUserLogin,TUserToken}" />
 		///     .
 		/// </summary>
 		/// <param name="factory">
-		///     <see cref="IConnectionFactory{TContext,TConnection}" />
+		///     <see cref="IConnectionFactory" />
 		/// </param>
 		/// <param name="describer">The <see cref="IdentityErrorDescriber" /> used to describe store errors.</param>
-		public UserStore(IConnectionFactory<TContext, TConnection> factory, IdentityErrorDescriber describer = null)
+		public UserStore(IConnectionFactory factory, IdentityErrorDescriber describer = null)
 		{
 			if (factory == null)
 				throw new ArgumentNullException(nameof(factory));

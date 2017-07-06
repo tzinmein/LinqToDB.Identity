@@ -220,7 +220,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		}
 	}
 
-	public class UserStoreWithGenerics : UserStore<DataContext, DataConnection, IdentityUserWithGenerics, MyIdentityRole,
+	public class UserStoreWithGenerics : UserStore<IdentityUserWithGenerics, MyIdentityRole,
 		string, IdentityUserClaimWithIssuer, IdentityUserRoleWithDate, IdentityUserLoginWithContext,
 		IdentityUserTokenWithStuff>
 	{
@@ -283,8 +283,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		}
 	}
 
-	public class RoleStoreWithGenerics : RoleStore<DataContext, DataConnection, MyIdentityRole, string,
-		IdentityUserRoleWithDate, IdentityRoleClaim<string>>
+	public class RoleStoreWithGenerics : RoleStore<MyIdentityRole, string, IdentityRoleClaim<string>>
 	{
 		private string _loginContext;
 
