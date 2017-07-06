@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using LinqToDB.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace LinqToDB.Identity
@@ -83,6 +84,17 @@ namespace LinqToDB.Identity
 	{
 		private readonly IConnectionFactory _factory;
 
+		/// <summary>
+		/// Gets <see cref="DataConnection"/> from supplied <see cref="IConnectionFactory"/>
+		/// </summary>
+		/// <returns><see cref="DataConnection"/> </returns>
+		protected DataConnection GetConnection() => _factory.GetConnection();
+		/// <summary>
+		/// Gets <see cref="IDataContext"/> from supplied <see cref="IConnectionFactory"/>
+		/// </summary>
+		/// <returns><see cref="IDataContext"/> </returns>
+		protected IDataContext GetContext() => _factory.GetContext();
+
 		private bool _disposed;
 
 		/// <summary>
@@ -104,11 +116,6 @@ namespace LinqToDB.Identity
 
 
 		/// <summary>
-		///     Gets the database context for this store.
-		/// </summary>
-		private IDataContext Context => _factory.GetContext();
-
-		/// <summary>
 		///     Gets or sets the <see cref="IdentityErrorDescriber" /> for any error that occurred with the current operation.
 		/// </summary>
 		public IdentityErrorDescriber ErrorDescriber { get; set; }
@@ -123,7 +130,7 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>A <see cref="Task{TResult}" /> that represents the <see cref="IdentityResult" /> of the asynchronous query.</returns>
-		public virtual async Task<IdentityResult> CreateAsync(TRole role,
+		public async Task<IdentityResult> CreateAsync(TRole role,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -131,10 +138,19 @@ namespace LinqToDB.Identity
 			if (role == null)
 				throw new ArgumentNullException(nameof(role));
 
-
-			await Task.Run(() => Context.TryInsertAndSetIdentity(role), cancellationToken);
-			return IdentityResult.Success;
+			using (var db = GetConnection())
+				return await CreateAsync(db, role, cancellationToken);
 		}
+
+		/// <inheritdoc cref="CreateAsync(TRole,CancellationToken)"/>
+		protected virtual async Task<IdentityResult> CreateAsync(DataConnection db, TRole role, CancellationToken cancellationToken)
+		{
+			await Task.Run(() => db.TryInsertAndSetIdentity(role), cancellationToken);
+			return IdentityResult.Success;
+			
+		}
+
+
 
 		/// <summary>
 		///     Updates a role in a store as an asynchronous operation.
@@ -145,7 +161,7 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>A <see cref="Task{TResult}" /> that represents the <see cref="IdentityResult" /> of the asynchronous query.</returns>
-		public virtual async Task<IdentityResult> UpdateAsync(TRole role,
+		public async Task<IdentityResult> UpdateAsync(TRole role,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -153,7 +169,14 @@ namespace LinqToDB.Identity
 			if (role == null)
 				throw new ArgumentNullException(nameof(role));
 
-			var result = await Task.Run(() => _factory.GetContext().UpdateConcurrent<TRole, TKey>(role), cancellationToken);
+			using (var db = GetConnection())
+				return await UpdateAsync(db, role, cancellationToken);
+		}
+
+		/// <inheritdoc cref="UpdateAsync(TRole, CancellationToken)"/>
+		protected virtual async Task<IdentityResult> UpdateAsync(DataConnection db, TRole role, CancellationToken cancellationToken)
+		{
+			var result = await Task.Run(() => db.UpdateConcurrent<TRole, TKey>(role), cancellationToken);
 			return result == 1 ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
 		}
 
@@ -166,7 +189,7 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>A <see cref="Task{TResult}" /> that represents the <see cref="IdentityResult" /> of the asynchronous query.</returns>
-		public virtual async Task<IdentityResult> DeleteAsync(TRole role,
+		public async Task<IdentityResult> DeleteAsync(TRole role,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -174,10 +197,15 @@ namespace LinqToDB.Identity
 			if (role == null)
 				throw new ArgumentNullException(nameof(role));
 
+			using (var db = GetConnection())
+				return await DeleteAsync(db, role, cancellationToken);
+		}
+
+		/// <inheritdoc cref="DeleteAsync(TRole, CancellationToken)"/>
+		private async Task<IdentityResult> DeleteAsync(DataConnection db, TRole role, CancellationToken cancellationToken)
+		{
 			var result = await Task.Run(() =>
-				_factory
-					.GetContext()
-					.GetTable<TRole>()
+				db.GetTable<TRole>()
 					.Where(_ => _.Id.Equals(role.Id) && _.ConcurrencyStamp == role.ConcurrencyStamp)
 					.Delete(), cancellationToken);
 
@@ -326,7 +354,7 @@ namespace LinqToDB.Identity
 		/// <summary>
 		///     A navigation property for the roles the store contains.
 		/// </summary>
-		public virtual IQueryable<TRole> Roles => Context.GetTable<TRole>();
+		public virtual IQueryable<TRole> Roles => GetContext().GetTable<TRole>();
 
 		/// <summary>
 		///     Get the claims associated with the specified <paramref name="role" /> as an asynchronous operation.
@@ -344,7 +372,16 @@ namespace LinqToDB.Identity
 			if (role == null)
 				throw new ArgumentNullException(nameof(role));
 
-			return await Context.GetTable<TRoleClaim>()
+			using (var db = GetConnection())
+			{
+				return await GetClaimsAsync(db, role, cancellationToken);
+			}
+		}
+
+		/// <inheritdoc cref="GetClaimsAsync(TRole, CancellationToken)"/>
+		protected virtual async Task<IList<Claim>> GetClaimsAsync(DataConnection db, TRole role, CancellationToken cancellationToken)
+		{
+			return await db.GetTable<TRoleClaim>()
 				.Where(rc => rc.RoleId.Equals(role.Id))
 				.Select(c => c.ToClaim())
 				.ToListAsync(cancellationToken);
@@ -360,8 +397,7 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>The <see cref="Task" /> that represents the asynchronous operation.</returns>
-		public virtual Task AddClaimAsync(TRole role, Claim claim,
-			CancellationToken cancellationToken = default(CancellationToken))
+		public async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			ThrowIfDisposed();
 			if (role == null)
@@ -369,9 +405,15 @@ namespace LinqToDB.Identity
 			if (claim == null)
 				throw new ArgumentNullException(nameof(claim));
 
-			Context.TryInsertAndSetIdentity(CreateRoleClaim(role, claim));
+			using (var db = GetConnection())
+				await AddClaimAsync(db, role, claim, cancellationToken);
+		}
 
-			return Task.FromResult(false);
+		/// <inheritdoc cref="AddClaimAsync(TRole, Claim, CancellationToken)"/>
+		protected virtual async Task AddClaimAsync(DataConnection db, TRole role, Claim claim, CancellationToken cancellationToken)
+		{
+			await Task.Run(() => db.TryInsertAndSetIdentity(CreateRoleClaim(role, claim)),
+				cancellationToken);
 		}
 
 		/// <summary>
@@ -393,8 +435,17 @@ namespace LinqToDB.Identity
 			if (claim == null)
 				throw new ArgumentNullException(nameof(claim));
 
+			using (var db = GetConnection())
+			{
+				await RemoveClaimAsync(db, role, claim, cancellationToken);
+			}
+		}
+
+		/// <inheritdoc cref="RemoveClaimAsync(TRole, Claim, CancellationToken)"/>
+		protected virtual async Task RemoveClaimAsync(DataConnection db, TRole role, Claim claim, CancellationToken cancellationToken)
+		{
 			await Task.Run(() =>
-					Context.GetTable<TRoleClaim>()
+					db.GetTable<TRoleClaim>()
 						.Where(rc => rc.RoleId.Equals(role.Id) && rc.ClaimValue == claim.Value && rc.ClaimType == claim.Type)
 						.Delete(),
 				cancellationToken);
