@@ -160,7 +160,7 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TUserRole">The type representing a user role.</typeparam>
 	/// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
 	/// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-	public abstract class UserStore<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken> :
+	public class UserStore<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken> :
 		IUserLoginStore<TUser>,
 		IUserRoleStore<TUser>,
 		IUserClaimStore<TUser>,
@@ -174,10 +174,10 @@ namespace LinqToDB.Identity
 		IUserAuthenticationTokenStore<TUser>
 		where TUser : class, IIdentityUser<TKey>
 		where TRole : class, IIdentityRole<TKey>
-		where TUserClaim : class, IIdentityUserClaim<TKey>
-		where TUserRole : class, IIdentityUserRole<TKey>
-		where TUserLogin : class, IIdentityUserLogin<TKey>
-		where TUserToken : class, IIdentityUserToken<TKey>
+		where TUserClaim : class, IIdentityUserClaim<TKey>, new()
+		where TUserRole : class, IIdentityUserRole<TKey>, new()
+		where TUserLogin : class, IIdentityUserLogin<TKey>, new()
+		where TUserToken : class, IIdentityUserToken<TKey>, new ()
 		where TKey : IEquatable<TKey>
 	{
 		private readonly IConnectionFactory _factory;
@@ -1754,7 +1754,14 @@ namespace LinqToDB.Identity
 		/// <param name="user"></param>
 		/// <param name="role"></param>
 		/// <returns></returns>
-		protected abstract TUserRole CreateUserRole(TUser user, TRole role);
+		protected virtual TUserRole CreateUserRole(TUser user, TRole role)
+		{
+			return new TUserRole()
+			{
+				UserId = user.Id,
+				RoleId = role.Id
+			};
+		}
 
 		/// <summary>
 		///     Create a new entity representing a user claim.
@@ -1762,7 +1769,12 @@ namespace LinqToDB.Identity
 		/// <param name="user"></param>
 		/// <param name="claim"></param>
 		/// <returns></returns>
-		protected abstract TUserClaim CreateUserClaim(TUser user, Claim claim);
+		protected virtual TUserClaim CreateUserClaim(TUser user, Claim claim)
+		{
+			var res = new TUserClaim() {UserId = user.Id};
+			res.InitializeFromClaim(claim);
+			return res;
+		}
 
 		/// <summary>
 		///     Create a new entity representing a user login.
@@ -1770,7 +1782,16 @@ namespace LinqToDB.Identity
 		/// <param name="user"></param>
 		/// <param name="login"></param>
 		/// <returns></returns>
-		protected abstract TUserLogin CreateUserLogin(TUser user, UserLoginInfo login);
+		protected virtual TUserLogin CreateUserLogin(TUser user, UserLoginInfo login)
+		{
+			return new TUserLogin()
+			{
+				UserId = user.Id,
+				LoginProvider = login.LoginProvider,
+				ProviderDisplayName = login.ProviderDisplayName,
+				ProviderKey = login.ProviderKey
+			};
+		}
 
 		/// <summary>
 		///     Create a new entity representing a user token.
@@ -1780,7 +1801,16 @@ namespace LinqToDB.Identity
 		/// <param name="name"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		protected abstract TUserToken CreateUserToken(TUser user, string loginProvider, string name, string value);
+		protected virtual TUserToken CreateUserToken(TUser user, string loginProvider, string name, string value)
+		{
+			return new TUserToken()
+			{
+				UserId = user.Id,
+				LoginProvider = loginProvider,
+				Name = name,
+				Value = value
+			};
+		}
 
 		/// <summary>
 		///     Converts the provided <paramref name="id" /> to a strongly typed key object.

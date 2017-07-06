@@ -55,18 +55,6 @@ namespace LinqToDB.Identity
 		{
 		}
 
-		/// <summary>
-		///     Creates a entity representing a role claim.
-		/// </summary>
-		/// <param name="role">The associated role.</param>
-		/// <param name="claim">The associated claim.</param>
-		/// <returns>The role claim entity.</returns>
-		protected override IdentityRoleClaim<TKey> CreateRoleClaim(TRole role, Claim claim)
-		{
-			var roleClaim = new IdentityRoleClaim<TKey> {RoleId = role.Id};
-			roleClaim.InitializeFromClaim(claim);
-			return roleClaim;
-		}
 	}
 
 	/// <summary>
@@ -75,12 +63,12 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
 	/// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-	public abstract class RoleStore<TKey, TRole, TRoleClaim> :
+	public class RoleStore<TKey, TRole, TRoleClaim> :
 		IQueryableRoleStore<TRole>,
 		IRoleClaimStore<TRole>
 		where TRole : class, IIdentityRole<TKey>
 		where TKey : IEquatable<TKey>
-		where TRoleClaim : class, IIdentityRoleClaim<TKey>
+		where TRoleClaim : class, IIdentityRoleClaim<TKey>, new()
 	{
 		private readonly IConnectionFactory _factory;
 
@@ -509,6 +497,11 @@ namespace LinqToDB.Identity
 		/// <param name="role">The associated role.</param>
 		/// <param name="claim">The associated claim.</param>
 		/// <returns>The role claim entity.</returns>
-		protected abstract TRoleClaim CreateRoleClaim(TRole role, Claim claim);
+		protected virtual TRoleClaim CreateRoleClaim(TRole role, Claim claim)
+		{
+			var roleClaim = new TRoleClaim(){ RoleId = role.Id };
+			roleClaim.InitializeFromClaim(claim);
+			return roleClaim;
+		}
 	}
 }

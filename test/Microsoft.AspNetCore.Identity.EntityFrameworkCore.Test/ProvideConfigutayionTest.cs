@@ -14,6 +14,11 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 			services
 				.AddIdentity<IdentityUser, IdentityRole>()
 				.AddLinqToDBStores(new DefaultConnectionFactory());
+
+			var sp = services.BuildServiceProvider();
+
+			Assert.NotNull(sp.GetService<IUserStore<IdentityUser>>());
+			Assert.NotNull(sp.GetService<IRoleStore<IdentityRole>>());
 		}
 
 		[Fact]
@@ -23,6 +28,11 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 			services
 				.AddIdentity<IdentityUser<long>, IdentityRole<long>>()
 				.AddLinqToDBStores<long>(new DefaultConnectionFactory());
+
+			var sp = services.BuildServiceProvider();
+
+			Assert.NotNull(sp.GetService<IUserStore<IdentityUser<long>>>());
+			Assert.NotNull(sp.GetService<IRoleStore<IdentityRole<long>>>());
 		}
 
 		[Fact]
@@ -38,6 +48,11 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 					IdentityUserLogin<decimal>, 
 					IdentityUserToken<decimal>, 
 					IdentityRoleClaim<decimal>>(new DefaultConnectionFactory());
+
+			var sp = services.BuildServiceProvider();
+
+			Assert.NotNull(sp.GetService<IUserStore<IdentityUser<decimal>>>());
+			Assert.NotNull(sp.GetService<IRoleStore<IdentityRole<decimal>>>());
 		}
 
 	}
