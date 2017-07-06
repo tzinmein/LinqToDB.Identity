@@ -278,12 +278,20 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>A <see cref="Task{TResult}" /> that result of the look up.</returns>
-		public virtual Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			ThrowIfDisposed();
 			var roleId = ConvertIdFromString(id);
-			return Roles.FirstOrDefaultAsync(u => u.Id.Equals(roleId), cancellationToken);
+
+			using (var db = GetConnection())
+				return await FindByIdAsync(db, roleId, cancellationToken);
+		}
+
+		/// <inheritdoc cref="FindByIdAsync(string, CancellationToken)"/>
+		protected virtual async Task<TRole> FindByIdAsync(DataConnection db, TKey roleId, CancellationToken cancellationToken)
+		{
+			return await db.GetTable<TRole>().FirstOrDefaultAsync(u => u.Id.Equals(roleId), cancellationToken);
 		}
 
 		/// <summary>
@@ -295,12 +303,22 @@ namespace LinqToDB.Identity
 		///     should be canceled.
 		/// </param>
 		/// <returns>A <see cref="Task{TResult}" /> that result of the look up.</returns>
-		public virtual Task<TRole> FindByNameAsync(string normalizedName,
+		public async Task<TRole> FindByNameAsync(string normalizedName,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			ThrowIfDisposed();
-			return Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName, cancellationToken);
+			using (var db = GetConnection())
+			{
+				return await FindByNameAsync(db, normalizedName, cancellationToken);
+			}
+
+		}
+
+		/// <inheritdoc cref="FindByNameAsync(string, CancellationToken)"/>
+		protected virtual async Task<TRole> FindByNameAsync(DataConnection db, string normalizedName, CancellationToken cancellationToken)
+		{
+			return await db.GetTable<TRole>().FirstOrDefaultAsync(r => r.NormalizedName == normalizedName, cancellationToken);
 		}
 
 		/// <summary>
