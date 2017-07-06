@@ -16,7 +16,7 @@ namespace LinqToDB.Identity
 	///     Creates a new instance of a persistence store for roles.
 	/// </summary>
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-	public class RoleStore<TRole> : RoleStore<TRole, string>
+	public class RoleStore<TRole> : RoleStore<string, TRole>
 		where TRole : IdentityRole<string>
 	{
 		/// <summary>
@@ -37,8 +37,8 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	public class RoleStore<TRole, TKey> :
-		RoleStore<TRole, TKey, IdentityRoleClaim<TKey>>
+	public class RoleStore<TKey, TRole> :
+		RoleStore<TKey, TRole, IdentityRoleClaim<TKey>>
 		where TRole : IdentityRole<TKey>
 		where TKey : IEquatable<TKey>
 	{
@@ -74,7 +74,7 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TRole">The type of the class representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
 	/// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-	public abstract class RoleStore<TRole, TKey, TRoleClaim> :
+	public abstract class RoleStore<TKey, TRole, TRoleClaim> :
 		IQueryableRoleStore<TRole>,
 		IRoleClaimStore<TRole>
 		where TRole : class, IIdentityRole<TKey>

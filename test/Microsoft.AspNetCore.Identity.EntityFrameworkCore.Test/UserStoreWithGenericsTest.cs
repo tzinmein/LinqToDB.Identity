@@ -233,9 +233,9 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 
 	public class UserStoreWithGenerics :
 		UserStore<
+			string,
 			IdentityUserWithGenerics,
 			MyIdentityRole,
-			string,
 			IdentityUserClaimWithIssuer,
 			IdentityUserRoleWithDate,
 			IdentityUserLoginWithContext,
@@ -296,7 +296,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 		}
 	}
 
-	public class RoleStoreWithGenerics : RoleStore<MyIdentityRole, string, IdentityRoleClaimWithIssuer>
+	public class RoleStoreWithGenerics : RoleStore<string, MyIdentityRole, IdentityRoleClaimWithIssuer>
 	{
 		private string _loginContext;
 

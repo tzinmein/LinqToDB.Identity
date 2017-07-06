@@ -45,14 +45,14 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 			services.AddSingleton<IRoleStore<GuidRole>>(new ApplicationRoleStore(context ?? CreateTestContext()));
 		}
 
-		public class ApplicationUserStore : UserStore<GuidUser, GuidRole, Guid>
+		public class ApplicationUserStore : UserStore<Guid, GuidUser, GuidRole>
 		{
 			public ApplicationUserStore(IConnectionFactory factory) : base(factory)
 			{
 			}
 		}
 
-		public class ApplicationRoleStore : RoleStore<GuidRole, Guid>
+		public class ApplicationRoleStore : RoleStore<Guid, GuidRole>
 		{
 			public ApplicationRoleStore(IConnectionFactory factory) : base(factory)
 			{

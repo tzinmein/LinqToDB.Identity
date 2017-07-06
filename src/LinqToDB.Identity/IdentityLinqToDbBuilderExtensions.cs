@@ -70,10 +70,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
 		private static IServiceCollection GetDefaultServices(Type keyType, Type userType, Type userClaimType, Type userRoleType, Type userLoginType, Type userTokenType, Type roleType, Type roleClaimType)
 		{
-			//UserStore<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
-			var userStoreType = typeof(UserStore<,,,,,,>).MakeGenericType(userType, roleType, keyType, userClaimType, userRoleType, userLoginType, userTokenType);
-			// RoleStore<TRole, TKey, TRoleClaim>
-			var roleStoreType = typeof(RoleStore<,,>).MakeGenericType(roleType, keyType, roleClaimType);
+			//UserStore<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken>
+			var userStoreType = typeof(UserStore<,,,,,,>).MakeGenericType(keyType, userType, roleType, userClaimType, userRoleType, userLoginType, userTokenType);
+			// RoleStore<TKey, TRole, TRoleClaim>
+			var roleStoreType = typeof(RoleStore<,,>).MakeGenericType(keyType, roleType, roleClaimType);
 
 			var services = new ServiceCollection();
 			services.AddScoped(

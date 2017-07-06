@@ -20,7 +20,7 @@ namespace LinqToDB.Identity
 	///     Creates a new instance of a persistence store for the specified user type.
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
-	public class UserStore<TUser> : UserStore<TUser, IdentityRole, string>
+	public class UserStore<TUser> : UserStore<string, TUser, IdentityRole>
 		where TUser : IdentityUser<string>, new()
 	{
 		/// <summary>
@@ -41,7 +41,7 @@ namespace LinqToDB.Identity
 	/// </summary>
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
 	/// <typeparam name="TRole">The type representing a role.</typeparam>
-	public class UserStore<TUser, TRole> : UserStore<TUser, TRole, string>
+	public class UserStore<TUser, TRole> : UserStore<string, TUser, TRole>
 		where TUser : IdentityUser<string>
 		where TRole : IdentityRole<string>
 	{
@@ -64,8 +64,8 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TUser">The type representing a user.</typeparam>
 	/// <typeparam name="TRole">The type representing a role.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-	public class UserStore<TUser, TRole, TKey> :
-		UserStore<TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
+	public class UserStore<TKey, TUser, TRole> :
+		UserStore<TKey, TUser, TRole,IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
 			IdentityUserToken<TKey>>
 		where TUser : IdentityUser<TKey>
 		where TRole : IdentityRole<TKey>
@@ -160,7 +160,7 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TUserRole">The type representing a user role.</typeparam>
 	/// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
 	/// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-	public abstract class UserStore<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> :
+	public abstract class UserStore<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken> :
 		IUserLoginStore<TUser>,
 		IUserRoleStore<TUser>,
 		IUserClaimStore<TUser>,
