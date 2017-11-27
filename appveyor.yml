@@ -7,11 +7,19 @@ init:
   - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true"
 
 environment:
-  nugetVersion: 2.0.0
+  packageVersion: 2.0.0
 
 version: $(nugetVersion).{build}
 
 build_script:
+- ps: |
+    $env:packageVersion = $env:assemblyVersion
+    if ($env:APPVEYOR_REPO_BRANCH -ne "release") 
+    {
+        $env:packageVersion = "$env:assemblyVersion-rc$env:appveyor_build_number"
+    }
+
+    .\build\CodeJam.AppVeyor.FixVersionProps.ps1 -path src\LinqToDB.Identity\LinqToDB.Identity.csproj -buildVersion $env:assemblyVersion -nugetVersion $env:packageVersion
 - ps: .\build.ps1
 
 test: off
