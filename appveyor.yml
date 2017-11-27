@@ -1,15 +1,13 @@
-
+image: Visual Studio 2017
+configuration: Release
+skip_tags: true
 
 init:
   - git config --global core.autocrlf true
   - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true"
 
-cache:
-- packages -> **\packages.config
-- '%USERPROFILE%\.nuget\packages -> **\project.json'
-
 environment:
-  nugetVersion: 1.2.1
+  nugetVersion: 2.0.0
 
 version: $(nugetVersion).{build}
 
