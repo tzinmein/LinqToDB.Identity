@@ -1687,8 +1687,10 @@ namespace Microsoft.AspNetCore.Identity.Test
 			var stamp = await manager.GetSecurityStampAsync(user);
 			IdentityResultAssert.IsFailure(await manager.ChangePhoneNumberAsync(user, "111-111-1111", "bogus"),
 				"Invalid token.");
+#if !NETSTANDARD2_0 // has other messages
 			IdentityResultAssert.VerifyLogMessage(manager.Logger,
 				$"VerifyChangePhoneNumberTokenAsync() failed for user {await manager.GetUserIdAsync(user)}.");
+#endif
 			Assert.False(await manager.IsPhoneNumberConfirmedAsync(user));
 			Assert.Equal("123-456-7890", await manager.GetPhoneNumberAsync(user));
 			Assert.Equal(stamp, await manager.GetSecurityStampAsync(user));
@@ -1731,8 +1733,10 @@ namespace Microsoft.AspNetCore.Identity.Test
 			Assert.True(await manager.VerifyChangePhoneNumberTokenAsync(user, token2, num2));
 			Assert.False(await manager.VerifyChangePhoneNumberTokenAsync(user, token2, num1));
 			Assert.False(await manager.VerifyChangePhoneNumberTokenAsync(user, token1, num2));
+#if !NETSTANDARD2_0 // has other messages
 			IdentityResultAssert.VerifyLogMessage(manager.Logger,
 				$"VerifyChangePhoneNumberTokenAsync() failed for user {await manager.GetUserIdAsync(user)}.");
+#endif
 		}
 
 		[Fact]
