@@ -7,9 +7,9 @@ init:
   - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true"
 
 environment:
-  packageVersion: 2.0.0
+  assemblyVersion: 2.0.0
 
-version: $(nugetVersion).{build}
+version: $(assemblyVersion).{build}
 
 build_script:
 - ps: |

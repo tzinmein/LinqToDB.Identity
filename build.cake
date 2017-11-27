@@ -11,7 +11,7 @@ var testsPath           = Directory("test");
 var buildArtifacts      = Directory("./artifacts/packages");
 var solutionName        = "./LinqToDB.Identity.sln";
 var nugetProject        = "./src/LinqToDB.Identity/LinqToDB.Identity.csproj";
-var envPackageVersion   = EnvironmentVariable("nugetVersion");
+var envPackageVersion   = EnvironmentVariable("packageVersion");
 var argRelease          = Argument<string>("Release", null);
 
 var packageSuffix       = "";
