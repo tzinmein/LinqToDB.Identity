@@ -17,6 +17,10 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 {
+	using IdentityUser = LinqToDB.Identity.IdentityUser;
+	using IdentityRole = LinqToDB.Identity.IdentityRole;
+
+
 	public class DefaultPocoTest : IClassFixture<ScratchDatabaseFixture>
 	{
 		private readonly ApplicationBuilder _builder;

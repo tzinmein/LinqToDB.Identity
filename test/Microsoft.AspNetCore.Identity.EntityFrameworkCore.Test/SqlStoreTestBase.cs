@@ -21,8 +21,8 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 {
 	public abstract class SqlStoreTestBase<TUser, TRole, TKey> : UserManagerTestBase<TUser, TRole, TKey>,
 		IClassFixture<ScratchDatabaseFixture>
-		where TUser : IdentityUser<TKey>, new()
-		where TRole : IdentityRole<TKey>, new()
+		where TUser : LinqToDB.Identity.IdentityUser<TKey>, new()
+		where TRole : LinqToDB.Identity.IdentityRole<TKey>, new()
 		where TKey : IEquatable<TKey>
 	{
 		private readonly ScratchDatabaseFixture _fixture;
