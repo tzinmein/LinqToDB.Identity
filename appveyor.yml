@@ -4,7 +4,7 @@ skip_tags: true
 
 init:
   - git config --global core.autocrlf true
-  - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2012SP1;Database=master;Integrated Security=true"
+  - ps: $env:TestSqlServerDefaultConnectionString = "Server=(local)\SQL2014;Database=master;Integrated Security=true"
 
 environment:
   assemblyVersion: 2.0.0
