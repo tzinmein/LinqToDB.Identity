@@ -20,13 +20,9 @@ artifacts:
 - path: artifacts/packages/*.nupkg
 
 services:
-- mssql2012sp1
+- mssql2014
 #- mysql
 #- postgresql
-
-build:
-  project: LinqToDB.Identity.sln
-  verbosity: minimal
 
 deploy:
 - provider: NuGet
