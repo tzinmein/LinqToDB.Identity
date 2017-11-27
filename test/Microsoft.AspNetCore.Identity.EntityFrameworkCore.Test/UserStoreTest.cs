@@ -68,7 +68,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 			return CreateContext();
 		}
 
-		public void EnsureDatabase()
+		protected void EnsureDatabase()
 		{
 			CreateContext();
 		}
