@@ -39,7 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="linq2db" Version="2.0.0-rc1773" />
+		<PackageReference Include="linq2db" Version="2.0.0-*" />
 		</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net451' OR '$(TargetFramework)' == 'netstandard1.6' ">
