@@ -8,7 +8,7 @@
 		
 		<Authors>Ilya Chudin</Authors>
 		
-		<TargetFrameworks>netstandard1.6;net451;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net461;netstandard2.0;netcoreapp2.0</TargetFrameworks>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -39,31 +39,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="linq2db" Version="2.0.0-*" />
-		</ItemGroup>
+		<PackageReference Include="linq2db" Version="2.0.0-rc2" />
 	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net451' OR '$(TargetFramework)' == 'netstandard1.6' ">
-		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.1" />
-	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.3" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.0.3" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0' OR '$(TargetFramework)'=='netcoreapp2.0'">
 		<DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
 	</PropertyGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-		<Reference Include="System" />
-		<Reference Include="Microsoft.CSharp" />
-	</ItemGroup>
-
 </Project>
