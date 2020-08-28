@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Identity;
@@ -10,40 +9,43 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 {
-    public static class TestIdentityFactory
-    {
-   //     public static InMemoryContext CreateContext()
-   //     {
-   //         var services = new ServiceCollection();
-   //         var serviceProvider = services.BuildServiceProvider();
+	using IdentityRole = LinqToDB.Identity.IdentityRole;
+	using IdentityUser = LinqToDB.Identity.IdentityUser;
 
-   //         var db = new InMemoryContext();
-   //         //db.Database.EnsureCreated();
+	public static class TestIdentityFactory
+	{
+		//     public static InMemoryContext CreateContext()
+		//     {
+		//         var services = new ServiceCollection();
+		//         var serviceProvider = services.BuildServiceProvider();
 
-			//throw new NotImplementedException();
+		//         var db = new InMemoryContext();
+		//         //db.Database.EnsureCreated();
 
-   //         //return db;
-   //     }
+		//throw new NotImplementedException();
 
-        public static IServiceCollection CreateTestServices()
-        {
-            var services = new ServiceCollection();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddLogging();
-            services.AddIdentity<IdentityUser, IdentityRole>();
-            return services;
-        }
+		//         //return db;
+		//     }
 
-        public static RoleManager<IdentityRole> CreateRoleManager(IConnectionFactory<DataContext, DataConnection> factory)
-        {
-            var services = CreateTestServices();
-            services.AddSingleton<IRoleStore<IdentityRole>>(new RoleStore<DataContext, DataConnection, IdentityRole>(factory));
-            return services.BuildServiceProvider().GetRequiredService<RoleManager<IdentityRole>>();
-        }
+		public static IServiceCollection CreateTestServices()
+		{
+			var services = new ServiceCollection();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddLogging();
+			services.AddIdentity<IdentityUser, IdentityRole>();
+			return services;
+		}
 
-        //public static RoleManager<IdentityRole> CreateRoleManager()
-        //{
-        //    return CreateRoleManager(CreateContext());
-        //}
-    }
+		public static RoleManager<IdentityRole> CreateRoleManager(IConnectionFactory factory)
+		{
+			var services = CreateTestServices();
+			services.AddSingleton<IRoleStore<IdentityRole>>(new RoleStore<IdentityRole>(factory));
+			return services.BuildServiceProvider().GetRequiredService<RoleManager<IdentityRole>>();
+		}
+		//{
+
+		//public static RoleManager<IdentityRole> CreateRoleManager()
+		//    return CreateRoleManager(CreateContext());
+		//}
+	}
 }

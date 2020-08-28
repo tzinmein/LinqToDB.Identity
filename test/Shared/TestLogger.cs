@@ -7,36 +7,33 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNetCore.Identity.Test
 {
-    public interface ITestLogger
-    {
-        IList<string> LogMessages { get; }
-    }
+	public interface ITestLogger
+	{
+		IList<string> LogMessages { get; }
+	}
 
-    public class TestLogger<TName> : ILogger<TName>, ITestLogger
-    {
-        public IList<string> LogMessages { get; } = new List<string>();
+	public class TestLogger<TName> : ILogger<TName>, ITestLogger
+	{
+		public IDisposable BeginScope<TState>(TState state)
+		{
+			LogMessages.Add(state?.ToString());
+			return null;
+		}
 
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            LogMessages.Add(state?.ToString());
-            return null;
-        }
+		public bool IsEnabled(LogLevel logLevel)
+		{
+			return true;
+		}
 
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return true;
-        }
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+			Func<TState, Exception, string> formatter)
+		{
+			if (formatter == null)
+				LogMessages.Add(state.ToString());
+			else
+				LogMessages.Add(formatter(state, exception));
+		}
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            if (formatter == null)
-            {
-                LogMessages.Add(state.ToString());
-            }
-            else
-            {
-                LogMessages.Add(formatter(state, exception));
-            }
-        }
-    }
+		public IList<string> LogMessages { get; } = new List<string>();
+	}
 }

@@ -149,9 +149,9 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TRole">The type of role objects.</typeparam>
 	/// <typeparam name="TKey">The type of the primary key for users and roles.</typeparam>
 	public class IdentityDataConnection<TUser, TRole, TKey> :
-			IdentityDataConnection
-			<TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
-				IdentityRoleClaim<TKey>, IdentityUserToken<TKey>>
+		IdentityDataConnection
+		<TUser, TRole, TKey, IdentityUserClaim<TKey>, IdentityUserRole<TKey>, IdentityUserLogin<TKey>,
+			IdentityRoleClaim<TKey>, IdentityUserToken<TKey>>
 		where TUser : class, IIdentityUser<TKey>
 		where TRole : class, IIdentityRole<TKey>
 		where TKey : IEquatable<TKey>
@@ -229,7 +229,7 @@ namespace LinqToDB.Identity
 	/// <typeparam name="TRoleClaim">The type of the role claim object.</typeparam>
 	/// <typeparam name="TUserToken">The type of the user token object.</typeparam>
 	public class IdentityDataConnection<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TRoleClaim, TUserToken> :
-			DataConnection
+		DataConnection
 		where TUser : class, IIdentityUser<TKey>
 		where TRole : class, IIdentityRole<TKey>
 		where TKey : IEquatable<TKey>
