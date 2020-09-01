@@ -7,8 +7,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Identity.Test;
@@ -30,7 +28,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 
 		public TestConnectionFactory CreateContext()
 		{
-			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012),
+			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012, SqlServerProvider.SystemDataSqlClient),
 				"UserStoreWithGenericsTest",
 				_fixture.ConnectionString);
 

@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +42,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString; //"Data Source=:memory:;";
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(), "InMemoryEFUserStoreTestWithGenerics",
+			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "InMemoryEFUserStoreTestWithGenerics",
 				connectionString);
 			CreateTables(factory, connectionString);
 			return factory;

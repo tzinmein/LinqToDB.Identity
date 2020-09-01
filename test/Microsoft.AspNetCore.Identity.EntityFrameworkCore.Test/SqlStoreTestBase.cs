@@ -95,7 +95,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 			//db.Database.EnsureCreated();
 			//return db;
 
-			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012), "Test",
+			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012, SqlServerProvider.SystemDataSqlClient), "Test",
 				_fixture.ConnectionString);
 
 			CreateTables(factory, _fixture.ConnectionString);
