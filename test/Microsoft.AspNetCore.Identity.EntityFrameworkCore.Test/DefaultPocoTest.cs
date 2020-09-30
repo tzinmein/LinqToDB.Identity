@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 	public class DefaultPocoTest : IClassFixture<ScratchDatabaseFixture>
 	{
 		private readonly ApplicationBuilder _builder;
-		private readonly SqlServerDataProvider _dataProvider = new SqlServerDataProvider("*", SqlServerVersion.v2012);
+		private readonly SqlServerDataProvider _dataProvider = new SqlServerDataProvider("*", SqlServerVersion.v2012, SqlServerProvider.SystemDataSqlClient);
 
 		static DefaultPocoTest()
 		{

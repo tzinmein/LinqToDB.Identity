@@ -4,7 +4,6 @@
 using System;
 using System.Threading.Tasks;
 using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Identity.Test;
@@ -28,7 +27,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString;
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(), "RoleStoreTest", connectionString);
+			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "RoleStoreTest", connectionString);
 			factory.CreateTables<LinqToDB.Identity.IdentityUser, LinqToDB.Identity.IdentityRole, string>();
 			return factory;
 		}

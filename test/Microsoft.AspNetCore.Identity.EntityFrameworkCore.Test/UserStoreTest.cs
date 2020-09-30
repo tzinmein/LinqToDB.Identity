@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Identity.Test;
@@ -58,7 +57,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test
 
 		public TestConnectionFactory CreateContext(bool delete = false)
 		{
-			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012), "Test",
+			var factory = new TestConnectionFactory(new SqlServerDataProvider("*", SqlServerVersion.v2012, SqlServerProvider.SystemDataSqlClient), "Test",
 				_fixture.ConnectionString);
 
 			CreateTables(factory, _fixture.ConnectionString);

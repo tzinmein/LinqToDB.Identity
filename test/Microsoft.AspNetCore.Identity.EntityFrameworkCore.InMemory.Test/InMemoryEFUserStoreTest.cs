@@ -4,7 +4,6 @@
 using System;
 using System.Linq.Expressions;
 using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Identity.Test;
@@ -59,7 +58,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString;
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(), "InMemoryEFUserStoreTest", connectionString);
+			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "InMemoryEFUserStoreTest", connectionString);
 			CreateTables(factory, connectionString);
 			return factory;
 		}
