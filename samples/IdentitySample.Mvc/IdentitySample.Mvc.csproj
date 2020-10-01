@@ -4,12 +4,11 @@
     <Description>Identity sample MVC application on ASP.NET Core</Description>
     <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>Microsoft</Authors>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>IdentitySample.Mvc</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>IdentitySample.Mvc</PackageId>
-    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">1.1.1</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>

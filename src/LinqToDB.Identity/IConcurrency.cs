@@ -3,7 +3,7 @@
 namespace LinqToDB.Identity
 {
 	/// <summary>
-	///     Cpncurrency interface for <see cref="IIdentityRole{TKey}" /> and <see cref="IIdentityUser{TKey}" />/>
+	///     Concurrency interface for <see cref="IIdentityRole{TKey}" /> and <see cref="IIdentityUser{TKey}" />/>
 	/// </summary>
 	/// <typeparam name="TKey">The type used for the primary key.</typeparam>
 	public interface IConcurrency<TKey>

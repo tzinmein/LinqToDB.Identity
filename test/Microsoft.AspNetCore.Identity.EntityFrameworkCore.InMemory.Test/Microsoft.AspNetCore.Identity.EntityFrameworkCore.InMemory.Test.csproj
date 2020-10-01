@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+		<TargetFrameworks>netcoreapp2.1</TargetFrameworks>
 		<TreatWarningsAsErrors>t1rue</TreatWarningsAsErrors>
 
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -36,7 +36,7 @@
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
 		<DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
 	</PropertyGroup>
 	
