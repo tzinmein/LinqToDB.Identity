@@ -34,7 +34,6 @@ namespace Microsoft.AspNetCore.Identity.Test
 		public TestConnectionFactory(IDataProvider provider, string configuration, string connectionString)
 		{
 			_provider = provider;
-			Configuration.Linq.AllowMultipleQuery = true;
 			//DataConnection.AddConfiguration(configuration, connectionString, provider);
 			_configuration = configuration;
 			_connectionString = connectionString;
