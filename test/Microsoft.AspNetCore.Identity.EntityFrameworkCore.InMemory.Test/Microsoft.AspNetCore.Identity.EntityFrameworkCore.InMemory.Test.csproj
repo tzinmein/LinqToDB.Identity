@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<TreatWarningsAsErrors>t1rue</TreatWarningsAsErrors>
 
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -11,7 +11,6 @@
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test</PackageId>
 		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-		<RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,21 +22,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
 		
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-		<PackageReference Include="Moq" Version="4.9.0" />
-		<PackageReference Include="xunit" Version="2.4.0" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="xunit" Version="2.4.2" />
 
-		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Testing" Version="2.1.0-*" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Specification.Tests" Version="6.0.8" />
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
-		<DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
-	</PropertyGroup>
-	
 </Project>

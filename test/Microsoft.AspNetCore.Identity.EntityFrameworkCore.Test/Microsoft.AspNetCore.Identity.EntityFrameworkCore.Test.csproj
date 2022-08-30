@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		
 		<AssemblyName>Microsoft.AspNetCore.Identity.EntityFrameworkCore.Test</AssemblyName>
@@ -26,25 +26,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-		<PackageReference Include="Moq" Version="4.9.0" />
-		<PackageReference Include="xunit" Version="2.4.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="xunit" Version="2.4.2" />
 		
-		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Testing" Version="2.1.0-*" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
 	
-		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Specification.Tests" Version="6.0.8" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
-	</PropertyGroup>
 </Project>
