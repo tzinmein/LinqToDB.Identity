@@ -27,7 +27,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString;
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "RoleStoreTest", connectionString);
+			var factory = new TestConnectionFactory(new SQLiteDP(ProviderName.SQLite), "RoleStoreTest", connectionString);
 			factory.CreateTables<LinqToDB.Identity.IdentityUser, LinqToDB.Identity.IdentityRole, string>();
 			return factory;
 		}

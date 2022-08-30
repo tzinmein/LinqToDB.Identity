@@ -58,7 +58,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString;
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "InMemoryEFUserStoreTest", connectionString);
+			var factory = new TestConnectionFactory(new SQLiteDP(ProviderName.SQLite), "InMemoryEFUserStoreTest", connectionString);
 			CreateTables(factory, connectionString);
 			return factory;
 		}

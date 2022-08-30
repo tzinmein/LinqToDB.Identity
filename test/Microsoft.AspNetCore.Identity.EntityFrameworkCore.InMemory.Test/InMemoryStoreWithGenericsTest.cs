@@ -42,7 +42,7 @@ namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore.InMemory.Test
 		{
 			var connectionString = _storage.ConnectionString; //"Data Source=:memory:;";
 
-			var factory = new TestConnectionFactory(new SQLiteDataProvider(ProviderName.SQLite), "InMemoryEFUserStoreTestWithGenerics",
+			var factory = new TestConnectionFactory(new SQLiteDP(ProviderName.SQLite), "InMemoryEFUserStoreTestWithGenerics",
 				connectionString);
 			CreateTables(factory, connectionString);
 			return factory;

@@ -95,7 +95,6 @@ namespace Microsoft.AspNetCore.Identity.Test
 				(store, roles,
 				new UpperInvariantLookupNormalizer(),
 				new IdentityErrorDescriber(),
-				null,
 				null);
 		}
 	}
