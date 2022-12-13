@@ -8,7 +8,7 @@
 		
 		<Authors>Ilya Chudin</Authors>
 		
-		<TargetFrameworks>net461;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -41,11 +41,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="linq2db" Version="4.1.1" />
+		<PackageReference Include="linq2db" Version="4.3.0" />
 	
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
